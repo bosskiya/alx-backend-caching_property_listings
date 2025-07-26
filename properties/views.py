@@ -4,5 +4,7 @@ from .models import Property
 
 @cache_page(60 * 15)
 def property_list(request):
-    if request.method != 'GET':
-        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    properties = Property.objects.all().values(
+        'id', 'title', 'description', 'price', 'location', 'created_at'
+    )
+    return JsonResponse(list(properties), safe=False)
